@@ -6,23 +6,28 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= include_sync_config %>
   </head>
 
   <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <%= link_to 'WebChat', root_path, class: 'navbar-brand' %>
+        </div>
+        <ul class="nav navbar-nav">
+          <% if user_signed_in? %>
+          <li><a>Hi, <%= current_user.email %>!</a></li>
+          <li><%= link_to 'Friends', friendships_path %></li>
+          <li><%= link_to 'Users', users_path %></li>
+          <li><%= link_to 'Log Out', destroy_user_session_path, method: :delete %></li>
+          <% else %>
+          <li><%= link_to 'Log In', new_user_session_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
     <%= render "common/flashes" %>
     <%= yield %>
   </body>
 </html>
-<% if !current_user %>
-  <li><%= link_to("注册", new_user_registration_path) %> </li>
-  <li><%= link_to(content_tag(:i, '登入', class: 'fa fa-sign-in'), new_user_session_path) %></li>
-<% else %>
-  <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        Hi!, <%= current_user.email %>
-        <b class="caret"></b>
-    </a>
-    <ul class="dropdown-menu">
-        <li> <%= link_to(content_tag(:i, '登出', class: 'fa fa-sign-out'), destroy_user_session_path, method: :delete) %> </li>
-  </li>
-<% end %>
